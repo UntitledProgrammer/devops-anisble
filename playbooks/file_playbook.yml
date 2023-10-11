@@ -1,0 +1,32 @@
+---
+# For the purposes of testing the playbook, we can use the localhost.
+- hosts: localhost
+  connection: local
+
+  # Variables.
+  vars:
+    file_format: txt
+
+  # Prompted variables.
+  vars_prompt:
+    - name: filename # Asks for a filename.
+      prompt: title
+      private: false
+      unsafe: false
+
+    - name: message # Asks for a message to write onto the file.
+      prompt: "message"
+      private: false
+      unsafe: true
+
+  # Tasks.
+  tasks:
+    - name: create_document # Create and write the document.
+      copy:
+        dest: "../documents/{{ filename }}.{{ file_format }}"
+        content: |
+          {{ message }}
+
+    - name: debug_message # Inform the user that the document has been created.
+      debug:
+        msg: "The file 'documents/{{filename}}.{{file_format}}' has been created."
